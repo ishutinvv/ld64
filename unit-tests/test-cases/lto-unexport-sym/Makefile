@@ -1,5 +1,5 @@
 ##
-# Copyright (c) 2005 Apple Computer, Inc. All rights reserved.
+# Copyright (c) 2009 Apple Inc. All rights reserved.
 #
 # @APPLE_LICENSE_HEADER_START@
 # 
@@ -23,17 +23,21 @@
 TESTROOT = ../..
 include ${TESTROOT}/include/common.makefile
 
-# Test that file paths in a stab reference ends with a /
-# if there is no terminating /, gdb does not recognize this as a file path
-# The provided files coalesced1a.o coalesced1b.o are ppc64 linked
-# rdar://problem/4565088
+#
+# <rdar://problem/25585305> __asan_globals section is stripped out when building -flto
+#
+
 
 run: all
 
-all: 
-	$(CC) -gstabs+ main.c -o outfile
-	${FAIL_IF_BAD_MACHO} outfile
-	nm -ap outfile | grep '.*\<SO\>.*test-cases.*/$$' | ${PASS_IFF_STDIN}
+all:
+	${CC} ${CCFLAGS}  -c a.c 
+	${CC} ${CCFLAGS} -c b.c -flto
+	${CC} ${CCFLAGS}  a.o b.o -unexported_symbols_list unexp.list
+    # Check that unexported symbols are hidden
+	nm a.out | grep "t _bar" | ${FAIL_IF_EMPTY}
+	nm a.out | grep "t _foo" | ${FAIL_IF_EMPTY}
+	${PASS_IFF} true
 
 clean:
-	rm -rf outfile* 
+	rm a.out b.o a.o

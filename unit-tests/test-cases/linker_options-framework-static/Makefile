@@ -1,5 +1,5 @@
 ##
-# Copyright (c) 2006 Apple Computer, Inc. All rights reserved.
+# Copyright (c) 2013 Apple Inc. All rights reserved.
 #
 # @APPLE_LICENSE_HEADER_START@
 # 
@@ -24,29 +24,22 @@ TESTROOT = ../..
 include ${TESTROOT}/include/common.makefile
 
 #
-# The point of this test is a sanity check that ld
-# removes the stabs associated with a copy of a coalesced 
-# function that was removed.
-# Running nm through stabs-filter.pl produces connonical stabs
-# that can be diffed against a checked in know good set of stabs
+# Check linker options work for -framework containing static archive
 #
 
 run: all
 
-all: hello.o other.o 
-	g++-4.2 ${CCXXFLAGS} -gstabs+ -gused hello.o other.o -o stabs-hello-${ARCH}
-	${FAIL_IF_BAD_MACHO} stabs-hello-${ARCH}
-	nm -ap stabs-hello-${ARCH} | grep FUN | grep _Z3fooi | wc -l > stabs-hello-foo-count
-	echo "       1" > one
-	${PASS_IFF} diff stabs-hello-foo-count one
-
-hello.o : hello.cxx
-	g++-4.2 ${CCXXFLAGS} -gstabs+ -gused hello.cxx -c -o $@
-	${FAIL_IF_BAD_OBJ} $@
-
-other.o : other.cxx
-	g++-4.2 ${CCXXFLAGS} -gstabs+ -gused other.cxx -c -o $@
-	${FAIL_IF_BAD_OBJ} $@
+all:
+	mkdir -p Foo.framework
+	${CC} ${CCFLAGS} foo.c -c -o foo.o
+	libtool -static foo.o -o Foo.framework/Foo
+	${CC} ${CCFLAGS} main.c -c -o main.o
+	${LD} -r main.o -add_linker_option '-framework Foo' -o main2.o 
+	${CC} ${CCFLAGS} main2.o -o main -F.
+	${DYLDINFO} -export main | grep _foo | ${FAIL_IF_EMPTY}
+	${DYLDINFO} -export main | grep _main | ${FAIL_IF_EMPTY}
+	${PASS_IFF_GOOD_MACHO} main
 
 clean:
-	rm -rf stabs-hello-* *.o *.stabs stabs-hello-foo-count one
+	rm -rf main foo.o main.o main2.o Foo.framework
+	
