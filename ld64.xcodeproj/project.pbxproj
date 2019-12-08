@@ -263,6 +263,7 @@
 /* Begin PBXFileReference section */
 		83046A831C8FF23E00024A7E /* objcimageinfo */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = objcimageinfo; sourceTree = BUILT_PRODUCTS_DIR; };
 		83046A841C8FF2D000024A7E /* objcimageinfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = objcimageinfo.cpp; path = src/other/objcimageinfo.cpp; sourceTree = "<group>"; };
+		836E8A93239D412A00D3143F /* stub_arm64_classic.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = stub_arm64_classic.hpp; sourceTree = "<group>"; };
 		B028FCF01A9E7B4A00E3584B /* bitcode_bundle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bitcode_bundle.h; sourceTree = "<group>"; };
 		B028FCF11A9E7C3F00E3584B /* bitcode_bundle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bitcode_bundle.cpp; sourceTree = "<group>"; };
 		B091FB641ABA3AFB00CC8193 /* Bitcode.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Bitcode.hpp; path = src/ld/Bitcode.hpp; sourceTree = "<group>"; };
@@ -502,6 +503,7 @@
 				F9AA650F1051BD2B003E3539 /* stub_arm.hpp */,
 				F984A13B10B614CF009E9878 /* stub_arm_classic.hpp */,
 				F93A9BEC12C2E51900BAA11D /* stub_arm64.hpp */,
+				836E8A93239D412A00D3143F /* stub_arm64_classic.hpp */,
 				F9BA8A7F1096150F0097A440 /* stub_x86.hpp */,
 				F9BA8A7E1096150F0097A440 /* stub_x86_classic.hpp */,
 				F989D0391062E6350014B60C /* stub_x86_64.hpp */,

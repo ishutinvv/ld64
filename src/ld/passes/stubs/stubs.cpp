@@ -91,6 +91,7 @@ private:
 #include "stub_arm_classic.hpp"
 #if SUPPORT_ARCH_arm64
 #include "stub_arm64.hpp"
+#include "stub_arm64_classic.hpp"
 #endif
 
 Pass::Pass(const Options& opts) 
@@ -249,8 +250,10 @@ ld::Atom* Pass::makeStub(const ld::Atom& target, bool weakImport)
 				return new ld::passes::stubs::arm64::NonLazyStubAtom(*this, target, weakImport);
 			else if ( usingCompressedLINKEDIT() && !forLazyDylib && _options.noLazyBinding() && !stubToResolver )
 				return new ld::passes::stubs::arm64::NonLazyStubAtom(*this, target, weakImport);
-			else
+			else if ( usingCompressedLINKEDIT() && !forLazyDylib )
 				return new ld::passes::stubs::arm64::StubAtom(*this, target, stubToGlobalWeakDef, stubToResolver, weakImport, usingDataConst);
+			else
+				return new ld::passes::stubs::arm64::classic::StubAtom(*this, target, forLazyDylib, weakImport);
 			break;
 #endif
 	}
